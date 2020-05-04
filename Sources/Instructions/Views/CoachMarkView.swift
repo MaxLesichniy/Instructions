@@ -124,7 +124,7 @@ class CoachMarkView: UIView {
         }
 
         innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
-            for: (bodyView: bodyUIView, arrowView: arrowUIView), withPosition: position,
+            for: (bodyView: bodyUIView, arrowView: arrowUIView), arrowOrientation: self.arrowOrientation ?? .top, withPosition: position,
             horizontalOffset: offset)
 
         self.addConstraint(innerConstraints.arrowXposition!)
@@ -137,21 +137,51 @@ class CoachMarkView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
 
         self.addSubview(bodyUIView)
-        self.addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
 
         if let arrowUIView = arrowUIView, let arrowOrientation = self.arrowOrientation {
             self.addSubview(arrowUIView)
 
-            innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
-                for: (bodyView: bodyUIView, arrowView: arrowUIView), withPosition: .center,
-                horizontalOffset: 0)
+            switch arrowOrientation {
+            case .bottom, .top:
+                self.addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
+                innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
+                    for: (bodyView: bodyUIView, arrowView: arrowUIView), arrowOrientation: arrowOrientation, withPosition: .center,
+                    horizontalOffset: 0)
+            case .topLeft, .bottomLeft:
+                self.addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
 
+                innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
+                    for: (bodyView: bodyUIView, arrowView: arrowUIView), arrowOrientation: arrowOrientation, withPosition: .center,
+                    horizontalOffset: 0)
+                break
+            case .topRight, .bottomRight:
+                self.addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
+
+                innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
+                    for: (bodyView: bodyUIView, arrowView: arrowUIView), arrowOrientation: arrowOrientation, withPosition: .center,
+                    horizontalOffset: 0)
+                break
+            case .leftBottom, .leftTop:
+                self.addConstraints([bodyUIView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                                     arrowUIView.leadingAnchor.constraint(equalTo: leadingAnchor)])
+                innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
+                    for: (bodyView: bodyUIView, arrowView: arrowUIView), arrowOrientation: arrowOrientation, withPosition: .leading,
+                    horizontalOffset: 0)
+            case .rightBottom, .rightTop:
+                self.addConstraints([bodyUIView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                                     arrowUIView.trailingAnchor.constraint(equalTo: trailingAnchor)])
+                innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
+                    for: (bodyView: bodyUIView, arrowView: arrowUIView), arrowOrientation: arrowOrientation, withPosition: .trailing,
+                    horizontalOffset: 0)
+            }
+            
             self.addConstraint(innerConstraints.arrowXposition!)
             self.addConstraints(coachMarkLayoutHelper.verticalConstraints(
                 for: (bodyView: bodyUIView, arrowView: arrowUIView), in: self,
                 withProperties: (orientation: arrowOrientation, verticalArrowOffset: arrowOffset)
             ))
         } else {
+            self.addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
             self.addConstraint(bodyUIView.topAnchor.constraint(equalTo: topAnchor))
             self.addConstraint(bodyUIView.bottomAnchor.constraint(equalTo: bottomAnchor))
         }

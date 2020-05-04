@@ -28,7 +28,7 @@ internal class TransparentCoachMarkBodyView : UIControl, CoachMarkBodyView {
     // MARK: - Internal properties
     var nextControl: UIControl? {
         get {
-            return self
+            return nil
         }
     }
 
@@ -57,9 +57,9 @@ internal class TransparentCoachMarkBodyView : UIControl, CoachMarkBodyView {
 
         hintLabel.backgroundColor = UIColor.clear
         hintLabel.textColor = UIColor.white
-        hintLabel.font = UIFont.systemFont(ofSize: 15.0)
+        hintLabel.font = UIFont.systemFont(ofSize: 18.0, weight: .medium)
         hintLabel.isScrollEnabled = false
-        hintLabel.textAlignment = .justified
+        hintLabel.textAlignment = .center
         hintLabel.layoutManager.hyphenationFactor = 1.0
         hintLabel.isEditable = false
 
@@ -68,10 +68,10 @@ internal class TransparentCoachMarkBodyView : UIControl, CoachMarkBodyView {
 
         self.addSubview(hintLabel)
 
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[hintLabel]|", options: NSLayoutConstraint.FormatOptions(rawValue: 0),
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[hintLabel]|", options: [],
             metrics: nil, views: ["hintLabel": hintLabel]))
 
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[hintLabel]|", options: NSLayoutConstraint.FormatOptions(rawValue: 0),
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[hintLabel]|", options: [],
             metrics: nil, views: ["hintLabel": hintLabel]))
     }
 }

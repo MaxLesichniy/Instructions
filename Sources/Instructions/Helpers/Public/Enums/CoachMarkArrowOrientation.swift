@@ -27,5 +27,13 @@ import UIKit
 /// sit at the bottom of the body and point downward. (.Bottom)
 public enum CoachMarkArrowOrientation {
     case top
+    case topLeft
+    case topRight
     case bottom
+    case bottomLeft
+    case bottomRight
+    case leftTop
+    case rightTop
+    case leftBottom
+    case rightBottom
 }

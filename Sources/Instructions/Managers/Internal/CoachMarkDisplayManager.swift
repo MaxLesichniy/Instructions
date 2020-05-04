@@ -261,6 +261,13 @@ class CoachMarkDisplayManager {
                                                       andOverlayView overlayView: OverlayView) {
         let offset = coachMark.gapBetweenCoachMarkAndCutoutPath
 
+//        if coachMark.arrowOrientation == .bottomLeft ||
+//            coachMark.arrowOrientation == .bottomRight ||
+//            coachMark.arrowOrientation == .topLeft ||
+//            coachMark.arrowOrientation == .topRight {
+//            offset = 0
+//        }
+        
         // Depending where the cutoutPath sits, the coach mark will either
         // stand above or below it. Alternatively, it can also be displayed
         // over the cutoutPath.
@@ -269,13 +276,35 @@ class CoachMarkDisplayManager {
 
             coachMarkView.centerYAnchor.constraint(equalTo: parentView.centerYAnchor,
                                                    constant: constant).isActive = true
-        } else if coachMark.arrowOrientation! == .bottom {
+        } else if coachMark.arrowOrientation! == .bottom ||
+            coachMark.arrowOrientation! == .rightBottom ||
+            coachMark.arrowOrientation! == .leftBottom {
+            
             let constant = -(parentView.frame.size.height -
                 cutoutPath.bounds.origin.y + offset)
 
             coachMarkView.bottomAnchor.constraint(equalTo: parentView.bottomAnchor,
                                                   constant: constant).isActive = true
+        } else if coachMark.arrowOrientation! == .bottomLeft ||
+            coachMark.arrowOrientation! == .bottomRight {
+            
+            let constant = -(parentView.frame.size.height / 2 -
+                cutoutPath.bounds.origin.y + offset)
+            
+            coachMarkView.bottomAnchor.constraint(equalTo: parentView.bottomAnchor,
+                                                  constant: constant).isActive = true
+            
+        } else if coachMark.arrowOrientation! == .topLeft ||
+            coachMark.arrowOrientation! == .topRight {
+            
+            let constant = (cutoutPath.bounds.origin.y +
+                cutoutPath.bounds.size.height / 2) + offset
+            
+            coachMarkView.topAnchor.constraint(equalTo: parentView.topAnchor,
+                                               constant: constant).isActive = true
+            
         } else {
+            
             let constant = (cutoutPath.bounds.origin.y +
                 cutoutPath.bounds.size.height) + offset
 

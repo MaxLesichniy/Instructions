@@ -27,23 +27,42 @@ import Instructions
 internal class TransparentCoachMarkArrowView : UIImageView, CoachMarkArrowView {
     // MARK: - Initialization
     init(orientation: CoachMarkArrowOrientation) {
-        if orientation == .top {
-            super.init(image: UIImage(named: "arrow-top"))
-        } else {
-            super.init(image: UIImage(named: "arrow-bottom"))
+        switch orientation {
+        case .top:
+            super.init(image: UIImage(named: "arrow_top"))
+        case .topLeft:
+            super.init(image: UIImage(named: "arrow_top_left"))
+        case .topRight:
+            super.init(image: UIImage(named: "arrow_top_right"))
+        case .bottom:
+            super.init(image: UIImage(named: "arrow_bottom"))
+        case .bottomLeft:
+            super.init(image: UIImage(named: "arrow_bottom_left"))
+        case .bottomRight:
+            super.init(image: UIImage(named: "arrow_bottom_right"))
+        case .leftTop:
+            super.init(image: UIImage(named: "arrow_left_top"))
+        case .leftBottom:
+            super.init(image: UIImage(named: "arrow_left_bottom"))
+        case .rightTop:
+            super.init(image: UIImage(named: "arrow_right_top"))
+        case .rightBottom:
+            super.init(image: UIImage(named: "arrow_right_bottom"))
         }
-
+        
         self.translatesAutoresizingMaskIntoConstraints = false
-
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal,
-            toItem: nil, attribute: .notAnAttribute,
-            multiplier: 1, constant: self.image!.size.width))
-
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal,
-            toItem: nil, attribute: .notAnAttribute,
-            multiplier: 1, constant: self.image!.size.height))
+        
+        if let image = self.image {
+            self.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal,
+                                                  toItem: nil, attribute: .notAnAttribute,
+                                                  multiplier: 1, constant: image.size.width))
+            
+            self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal,
+                                                  toItem: nil, attribute: .notAnAttribute,
+                                                  multiplier: 1, constant: image.size.height))
+        }
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding.")
     }

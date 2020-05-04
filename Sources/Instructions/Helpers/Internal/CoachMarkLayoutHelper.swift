@@ -46,9 +46,22 @@ class CoachMarkLayoutHelper {
         let offset: CGFloat
 
         if passNumber == 0 {
-            computedProperties = CoachMarkComputedProperties(layoutDirection: self.layoutDirection,
-                                                             horizontalAligment: .centered)
-            offset = 0
+            switch coachMark.arrowOrientation {
+            case .leftBottom?, .leftTop?, .bottomLeft?, .topLeft?:
+                computedProperties = CoachMarkComputedProperties(layoutDirection: self.layoutDirection,
+                                                                 horizontalAligment: .leading)
+                offset = coachMark.gapBetweenCoachMarkAndCutoutPath
+            case .rightBottom?, .rightTop?, .bottomRight?, .topRight?:
+                computedProperties = CoachMarkComputedProperties(layoutDirection: self.layoutDirection,
+                                                                 horizontalAligment: .trailing)
+                offset = coachMark.gapBetweenCoachMarkAndCutoutPath
+            default:
+                computedProperties = CoachMarkComputedProperties(layoutDirection: self.layoutDirection,
+                                                                 horizontalAligment: .centered)
+                offset = coachMark.gapBetweenCoachMarkAndCutoutPath
+            }
+            
+            
         } else {
             computedProperties = computeProperties(for: coachMark, inParentView: parentView)
             offset = arrowOffset(for: coachMark, withProperties: computedProperties,

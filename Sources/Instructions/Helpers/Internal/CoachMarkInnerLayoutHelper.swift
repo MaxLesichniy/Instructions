@@ -23,11 +23,22 @@
 import UIKit
 
 class CoachMarkInnerLayoutHelper {
+    
     func horizontalArrowConstraints(for coachMarkViews: CoachMarkViews,
+                                    arrowOrientation: CoachMarkArrowOrientation,
                                     withPosition position: ArrowPosition,
                                     horizontalOffset: CGFloat) -> NSLayoutConstraint {
+        var arrowAttribute: NSLayoutConstraint.Attribute = .centerX
+        switch arrowOrientation {
+        case .leftBottom, .leftTop, .bottomRight, .topRight:
+            arrowAttribute = .trailing
+        case .rightBottom, .rightTop, .bottomLeft, .topLeft:
+            arrowAttribute = .leading
+        default:
+            break
+        }
         return NSLayoutConstraint(
-            item: coachMarkViews.arrowView, attribute: .centerX, relatedBy: .equal,
+            item: coachMarkViews.arrowView, attribute: arrowAttribute, relatedBy: .equal,
             toItem: coachMarkViews.bodyView, attribute: position.layoutAttribute,
             multiplier: 1, constant: adaptedOffset(for: position, offset: horizontalOffset)
         )
@@ -40,12 +51,33 @@ class CoachMarkInnerLayoutHelper {
 
         let verticalArrowOffset = properties.verticalArrowOffset
 
-        if properties.orientation == .top {
+        switch properties.orientation {
+        case .top, .topLeft, .topRight:
             constraints = topOrientationConstraints(for: coachMarkViews, in: parentView,
                                                     verticalArrowOffset: verticalArrowOffset)
-        } else if properties.orientation == .bottom {
+        
+        case .leftTop, .rightTop:
+            let offset = adaptedOffset(for: .top, offset: verticalArrowOffset)
+            constraints = [
+                coachMarkViews.arrowView.bottomAnchor
+                    .constraint(equalTo: coachMarkViews.bodyView.centerYAnchor,
+                                constant: offset),
+                parentView.topAnchor.constraint(equalTo: coachMarkViews.arrowView.topAnchor),
+                coachMarkViews.bodyView.bottomAnchor.constraint(equalTo: parentView.bottomAnchor)
+            ]
+        case .bottom, .bottomLeft, .bottomRight:
             constraints = bottomOrientationConstraints(for: coachMarkViews, in: parentView,
                                                        verticalArrowOffset: verticalArrowOffset)
+        case .leftBottom, .rightBottom:
+            let offset = adaptedOffset(for: .bottom, offset: verticalArrowOffset)
+            constraints = [
+                coachMarkViews.arrowView.topAnchor
+                    .constraint(equalTo: coachMarkViews.bodyView.centerYAnchor,
+                                constant: offset),
+                parentView.bottomAnchor.constraint(equalTo: coachMarkViews.arrowView.bottomAnchor),
+                coachMarkViews.bodyView.topAnchor.constraint(equalTo: parentView.topAnchor)
+            ]
+            
         }
 
         return constraints
@@ -91,8 +123,9 @@ class CoachMarkInnerLayoutHelper {
     private func adaptedOffset(for arrowOrientation: CoachMarkArrowOrientation,
                                offset: CGFloat) -> CGFloat {
         switch arrowOrientation {
-        case .top: return offset
-        case .bottom: return -offset
+        case .top, .leftTop, .rightTop: return offset
+        case .bottom, .leftBottom, .rightBottom: return -offset
+        default: return offset
         }
     }
 }
